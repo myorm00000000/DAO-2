@@ -10,7 +10,7 @@ namespace Ruddy\DAO\Drivers;
 
 interface IDriver
 {
-    public function connect($host, $database, $username, $password, $driver, $port);
+    public function connect($host, $database, $username, $password, $port);
     public function disconnect();
     public function prepare($query);
     public function bind($param, $value, $type);

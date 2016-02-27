@@ -8,7 +8,8 @@ namespace Ruddy\DAO;
  * @author Gil Nimer <gil@ruddy.nl>
  */
 
-class DAO {
+class DAO
+{
     /**
      * @var null
      */
@@ -17,38 +18,14 @@ class DAO {
     /**
      * @var array
      */
-    protected $drivers = array('PDO', 'MySQL', 'MySQLi', 'MSSQL', 'PostgreSQL');
+    protected $drivers = array('MySQL', 'MSSQL', 'SQLSRV', 'PostgreSQL');
 
     /**
      * Construct class and set driver
-     *
-     * @param $string
-     * @throws \Exception
      */
-    public function __construct($string)
+    public function __construct()
     {
-        if(in_array($string, $this->drivers)){
-            $driver = "\\Ruddy\\DAO\\Drivers\\{$string}";
-            $this->driver = new $driver();
-        } else {
-            throw new \Exception("DAO driver does not exists", "500");
-        }
-    }
-
-    /**
-     * Set driver
-     *
-     * @param $string
-     * @throws \Exception
-     */
-    public function setDriver($string)
-    {
-        if(in_array($string, $this->drivers)){
-            $driver = "\\Ruddy\\DAO\\Drivers\\{$string}";
-            $this->driver = new $driver();
-        } else {
-            throw new \Exception("DAO driver does not exists", "500");
-        }
+        $this->driver = new Drivers\PDO();
     }
 
     /**
@@ -60,13 +37,19 @@ class DAO {
      * @param $username
      * @param $password
      * @param null $port
-     * @return bool
+     * @throws \Exception
      */
     public function connect($driver, $host, $database, $username, $password, $port = null)
     {
-        if(is_null($this->driver))
+        if(is_null($this->driver)) {
             return false;
-        return $this->driver->connect($driver, $host, $database, $username, $password, $port);
+        }
+
+        if(in_array($driver, $this->drivers)){
+            return $this->driver->connect($driver, $host, $database, $username, $password, $port);
+        } else {
+            throw new \Exception("DAO driver does not exists", "500");
+        }
     }
 
     /**
@@ -76,8 +59,9 @@ class DAO {
      */
     public function disconnect()
     {
-        if(is_null($this->driver))
+        if(is_null($this->driver)){
             return false;
+        }
         return $this->driver->disconnect();
     }
 
@@ -89,8 +73,9 @@ class DAO {
      */
     public function prepare($query)
     {
-        if(is_null($this->driver))
+        if(is_null($this->driver)){
             return false;
+        }
         return $this->driver->prepare($query);
     }
 
@@ -104,8 +89,9 @@ class DAO {
      */
     public function bind($param, $value, $type = null)
     {
-        if(is_null($this->driver))
+        if(is_null($this->driver)){
             return false;
+        }
         return $this->driver->bind($param, $value, $type);
     }
 
@@ -116,8 +102,9 @@ class DAO {
      */
     public function execute()
     {
-        if(is_null($this->driver))
+        if(is_null($this->driver)){
             return false;
+        }
         return $this->driver->execute();
     }
 
@@ -128,8 +115,9 @@ class DAO {
      */
     public function close()
     {
-        if(is_null($this->driver))
+        if(is_null($this->driver)){
             return false;
+        }
         return $this->driver->close();
     }
 
@@ -141,8 +129,9 @@ class DAO {
      */
     public function fetch($fetch_style = \PDO::FETCH_ASSOC)
     {
-        if(is_null($this->driver))
+        if(is_null($this->driver)){
             return false;
+        }
         return $this->driver->fetch($fetch_style);
     }
 
@@ -154,8 +143,9 @@ class DAO {
      */
     public function fetchAll($fetch_style = \PDO::FETCH_ASSOC)
     {
-        if(is_null($this->driver))
+        if(is_null($this->driver)){
             return false;
+        }
         return $this->driver->fetchAll($fetch_style);
     }
 
@@ -167,8 +157,9 @@ class DAO {
      */
     public function fetchColumn($column_number = 0)
     {
-        if(is_null($this->driver))
+        if(is_null($this->driver)){
             return false;
+        }
         return $this->driver->fetchColumn($column_number);
     }
 
@@ -181,8 +172,9 @@ class DAO {
      */
     public function fetchObject($class_name, $ctor_args = null)
     {
-        if(is_null($this->driver))
+        if(is_null($this->driver)){
             return false;
+        }
         return $this->driver->fetchObject($class_name, $ctor_args);
     }
 } 

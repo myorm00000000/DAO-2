@@ -8,17 +8,12 @@ namespace Ruddy\DAO\Drivers;
  * @author Gil Nimer <gil@ruddy.nl>
  */
 
-class PDO implements IDriver {
-
+class PDO implements IDriver
+{
     /**
      * @var bool
      */
     protected $driver = false;
-
-    /**
-     * @var array
-     */
-    protected $drivers = array('MySQL', 'PostgreSQL', 'MSSQL', 'SQLSRV');
 
     /**
      * @var bool
@@ -33,22 +28,22 @@ class PDO implements IDriver {
     /**
      * Connect to Database
      *
+     * @param $driver
      * @param $host
      * @param $database
      * @param $username
      * @param $password
-     * @param $driver
      * @param null $port
      * @return mixed
      * @throws \Exception
      */
-    public function connect($host, $database, $username, $password, $driver, $port = null)
+    public function connect($driver, $host, $database, $username, $password, $port = null)
     {
-        if(in_array($driver, $this->drivers)){
-            $driver = "Ruddy\\DAO\\Drivers\\PDO\\{$driver}";
+        $driver = "Ruddy\\DAO\\Drivers\\PDO\\{$driver}";
+        try {
             $this->driver = new $driver($host, $database, $username, $password, $port);
-        } else {
-            throw new \Exception("PDO driver does not exists", "500");
+        } catch (\Exception $e){
+            die('Error!:'. $e->getMessage());
         }
 
         return $this->_db = $this->driver->getConn();
